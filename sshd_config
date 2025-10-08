@@ -1,0 +1,44 @@
+# ============================================================
+# Fichier de configuration SSH : sshd_config
+# Description : Ce fichier configure le démon SSH (sshd) sur le serveur.
+# Il définit les ports, l'authentification, la sécurité et les options
+# liées aux sessions utilisateurs.
+# ============================================================
+
+# ----------------------------
+# Configuration du port et écoute
+# ----------------------------
+# Définit le port TCP sur lequel SSH écoute (par défaut 22)
+Port {port}
+# Option facultative pour restreindre l'adresse d'écoute
+#ListenAddress 0.0.0.0
+
+# ----------------------------
+# Authentification
+# ----------------------------
+
+PermitRootLogin no
+# Désactive l'authentification par mot de passe
+PasswordAuthentication no
+# Désactive l'authentification par clavier interactif
+KbdInteractiveAuthentication no
+# Désactive les challenges interactifs
+ChallengeResponseAuthentication no
+# Active PAM (Pluggable Authentication Modules) pour l'authentification
+UsePAM yes
+
+# ----------------------------
+# Options de session et sécurité
+# ----------------------------
+# Autorise le transfert X11 pour les applications graphiques
+X11Forwarding yes
+# Désactive l'affichage du message du jour (motd) à la connexion
+PrintMotd no
+# Permet le passage des variables d'environnement locales
+AcceptEnv LANG LC_*
+
+# ----------------------------
+# Sous-systèmes
+# ----------------------------
+# Déclare le sous-système SFTP pour les transferts de fichiers
+Subsystem sftp /usr/lib/openssh/sftp-server

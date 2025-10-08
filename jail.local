@@ -1,0 +1,27 @@
+# ============================================================
+# Fichier de configuration Fail2Ban : jail.local
+# Description : Ce fichier configure les "jails" pour Fail2Ban, 
+# qui protège les services du serveur contre les tentatives 
+# de connexion non autorisées et les attaques par force brute.
+# ============================================================
+
+# ----------------------------
+# Protection SSH
+# ----------------------------
+[sshd]
+# Active cette jail
+enabled = true
+# Port sur lequel SSH écoute (doit correspondre à sshd_config)
+port = 55
+# Nombre de tentatives de connexion échouées avant le bannissement
+maxretry = 5
+# Durée du bannissement en secondes (ici 1 heure)
+bantime = 3600
+
+# ----------------------------
+# Protection HTTP basic auth Nginx
+# ----------------------------
+[nginx-http-auth]
+# Active cette jail
+enabled = true
+# maxretry et bantime utilisent les valeurs par défaut de Fail2Ban si non spécifiées

@@ -1,0 +1,19 @@
+# ----------------------------
+# Serveur par défaut (refus)
+# ----------------------------
+server {
+    # Écoute sur les ports 80
+    listen 80 default_server;
+    # Écoute sur les ports 443 avec SSL
+    listen 443 ssl default_server;
+
+    # Aucune redirection HTTP -> HTTPS
+    server_name _;
+
+    # Certificat bidon (nécessaire pour éviter erreur SSL)
+    ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
+    ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+
+    # Refuse tout accès
+    return 444;
+}
