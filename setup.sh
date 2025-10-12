@@ -49,6 +49,15 @@ echo " - Domaine phpMyAdmin : $PHPMA_DOMAIN"
 echo " - Accès phpMyAdmin : $PHPMA_USERNAME"
 echo " - FTP Admin : $FTP_ADMIN_USERNAME"
 echo " - Rétention des logs : $LOG_RETENTION_DAYS jour(s)"
+echo " - Nombre de sauvegardes locales : $BACKUP_KEEP_LOCAL"
+echo " - Nombre de sauvegardes distantes : $BACKUP_KEEP_REMOTE"
+echo " - Sauvegardes dans : $BACKUP_LOCAL_PATH"
+echo " - Sauvegardes SFTP : $BACKUP_SFTP_USER@$BACKUP_SFTP_HOST"
+echo " - Heure des sauvegardes : $BACKUP_TIME"
+echo " - Inclure /etc dans les sauvegardes : $BACKUP_INCLUDE_ETC"
+echo " - Fichier log des sauvegardes : $BACKUP_LOG_FILE"
+echo ""
+read -p "=> Les informations sont-elles correctes ? (Entrez pour continuer, Ctrl+C pour annuler)"
 echo ""
 echo ""
 
@@ -580,12 +589,57 @@ echo ""
 
 
 # -----------------------------
+# Sauvegarde des sites
+# -----------------------------
+apt-get install -y sshpass
+mkdir -p /etc/server_backup
+cp "$SCRIPT_DIR/backup.sh" /etc/server_backup/backup.sh
+chmod 750 /etc/server_backup/backup.sh
+chown root:root /etc/server_backup/backup.sh
+touch /etc/server_backup/backup.conf
+chmod 640 /etc/server_backup/backup.conf
+chown root:root /etc/server_backup/backup.conf
+echo "DB_ADMIN_USERNAME=\"${DB_ADMIN_USERNAME}\"" > /etc/server_backup/backup.conf
+echo "DB_ADMIN_PASSWORD=\"${DB_ADMIN_PASSWORD}\"" >> /etc/server_backup/backup.conf
+echo "BACKUP_LOCAL_PATH=${BACKUP_LOCAL_PATH}" >> /etc/server_backup/backup.conf
+echo "BACKUP_KEEP_LOCAL=${BACKUP_KEEP_LOCAL}" >> /etc/server_backup/backup.conf
+echo "BACKUP_KEEP_REMOTE=${BACKUP_KEEP_REMOTE}" >> /etc/server_backup/backup.conf
+echo "BACKUP_INCLUDE_ETC=${BACKUP_INCLUDE_ETC}" >> /etc/server_backup/backup.conf
+echo "BACKUP_TIME=${BACKUP_TIME}" >> /etc/server_backup/backup.conf
+echo "BACKUP_SFTP_HOST=${BACKUP_SFTP_HOST}" >> /etc/server_backup/backup.conf
+echo "BACKUP_SFTP_PORT=${BACKUP_SFTP_PORT}" >> /etc/server_backup/backup.conf
+echo "BACKUP_SFTP_USER=${BACKUP_SFTP_USER}" >> /etc/server_backup/backup.conf
+echo "BACKUP_SFTP_PASS=${BACKUP_SFTP_PASS}" >> /etc/server_backup/backup.conf
+echo "BACKUP_SFTP_REMOTE_PATH=${BACKUP_SFTP_REMOTE_PATH}" >> /etc/server_backup/backup.conf
+echo "BACKUP_LOG_FILE=${BACKUP_LOG_FILE}" >> /etc/server_backup/backup.conf
+
+# Ajouter une tâche cron pour les sauvegardes
+if [[ "$BACKUP_TIME" =~ ^([0-1][0-9]|2[0-3]):([0-5][0-9])$ ]]; then
+    hh="${BASH_REMATCH[1]}"
+    mm="${BASH_REMATCH[2]}"
+else
+    echo "Format BACKUP_TIME invalide (${BACKUP_TIME}), utilisation 03:00 par défaut."
+    hh="03"
+    mm="00"
+fi
+cron_entry="${mm} ${hh} * * * /etc/server_backup/backup.sh >> ${BACKUP_LOG_FILE} 2>&1"
+(crontab -l 2>/dev/null; echo "$cron_entry") | crontab -
+echo ""
+echo ""
+echo "=> Script de sauvegarde configuré"
+echo ""
+echo ""
+
+
+
+# -----------------------------
 # Suppression des mots de passe du fichier setup.conf
 # -----------------------------
 sed -i "s/ADMIN_PASSWORD=\"$ADMIN_PASSWORD\"/ADMIN_PASSWORD=\"\"/g" $SCRIPT_DIR/setup.conf
 sed -i "s/DB_ADMIN_PASSWORD=\"$DB_ADMIN_PASSWORD\"/DB_ADMIN_PASSWORD=\"\"/g" $SCRIPT_DIR/setup.conf
 sed -i "s/PHPMA_PASSWORD=\"$PHPMA_PASSWORD\"/PHPMA_PASSWORD=\"\"\"/g" $SCRIPT_DIR/setup.conf
 sed -i "s/FTP_ADMIN_PASSWORD=\"$FTP_ADMIN_PASSWORD\"/FTP_ADMIN_PASSWORD=\"\"/g" $SCRIPT_DIR/setup.conf
+sed -i "s/BACKUP_SFTP_PASS=\"$BACKUP_SFTP_PASS\"/BACKUP_SFTP_PASS=\"\"/g" $SCRIPT_DIR/setup.conf
 echo ""
 echo ""
 echo "=> Mots de passe supprimés du fichier setup.conf"
