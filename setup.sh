@@ -68,6 +68,11 @@ echo ""
 # -----------------------------
 # Changer le hostname
 # -----------------------------
+echo ""
+echo ""
+echo "=> Changement du hostname..."
+echo ""
+echo ""
 hostnamectl set-hostname "$HOSTNAME"
 systemctl restart systemd-logind
 echo ""
@@ -81,6 +86,11 @@ echo ""
 # -----------------------------
 # Mettre à jour les composants logiciels
 # -----------------------------
+echo ""
+echo ""
+echo "=> Mise à jour des composants logiciels..."
+echo ""
+echo ""
 apt update
 apt upgrade -y
 apt autoremove -y
@@ -95,6 +105,11 @@ echo ""
 # -----------------------------
 # Créer l’utilisateur administrateur système
 # -----------------------------
+echo ""
+echo ""
+echo "=> Création de l'utilisateur administrateur système..."
+echo ""
+echo ""
 # Générer le mot de passe chiffré pour useradd
 ENCRYPTED_PASSWORD=$(openssl passwd -1 "$ADMIN_PASSWORD")
 
@@ -121,6 +136,11 @@ fi
 # -----------------------------
 # Installer les outils de base
 # -----------------------------
+echo ""
+echo ""
+echo "=> Installation des outils de base..."
+echo ""
+echo ""
 apt install wget curl unzip nano htop -y
 echo ""
 echo ""
@@ -133,7 +153,11 @@ echo ""
 # -----------------------------
 # SSH : configuration
 # -----------------------------
-
+echo ""
+echo ""
+echo "=> Configuration de SSH..."
+echo ""
+echo ""
 # Détecter l'IP du serveur automatiquement
 SERVER_IP=$(hostname -I | awk '{print $1}')
 
@@ -199,6 +223,11 @@ fi
 # -----------------------------
 # Configuration de base du pare-feu (UFW)
 # -----------------------------
+echo ""
+echo ""
+echo "=> Configuration du pare-feu UFW..."
+echo ""
+echo ""
 apt install ufw -y
 ufw default deny incoming
 ufw default allow outgoing
@@ -218,6 +247,11 @@ echo ""
 # -----------------------------
 # Installer et configurer Fail2Ban
 # -----------------------------
+echo ""
+echo ""
+echo "=> Installation et configuration de Fail2Ban..."
+echo ""
+echo ""
 apt install fail2ban -y
 
 JAIL_LOCAL_SRC="$SCRIPT_DIR/jail.local"
@@ -247,6 +281,11 @@ fi
 # -----------------------------
 # Installer Nginx
 # -----------------------------
+echo ""
+echo ""
+echo "=> Installation de Nginx..."
+echo ""
+echo ""
 apt install nginx -y
 systemctl enable nginx
 systemctl start nginx
@@ -261,6 +300,11 @@ echo ""
 # -----------------------------
 # Ouvrir les ports pour Nginx
 # -----------------------------
+echo ""
+echo ""
+echo "=> Ouverture des ports Nginx dans le pare-feu..."
+echo ""
+echo ""
 # HTTPS
 ufw allow 443/tcp
 
@@ -278,6 +322,11 @@ echo ""
 # -----------------------------
 # Installer PHP 8.2 FPM et extensions
 # -----------------------------
+echo ""
+echo ""
+echo "=> Installation de PHP 8.2 FPM et extensions..."
+echo ""
+echo ""
 apt install software-properties-common -y
 add-apt-repository ppa:ondrej/php -y
 apt update
@@ -297,6 +346,11 @@ echo ""
 # -----------------------------
 # Installer ASP.NET Core 9 Runtime
 # -----------------------------
+echo ""
+echo ""
+echo "=> Installation de ASP.NET Core 9 Runtime..."
+echo ""
+echo ""
 add-apt-repository ppa:dotnet/backports -y
 apt update
 apt install -y aspnetcore-runtime-9.0
@@ -339,6 +393,11 @@ echo ""
 # -----------------------------
 # Installer Certbot pour Let’s Encrypt
 # -----------------------------
+echo ""
+echo ""
+echo "=> Installation de Certbot pour Nginx..."
+echo ""
+echo ""
 apt install certbot python3-certbot-nginx -y
 echo ""
 echo ""
@@ -351,7 +410,11 @@ echo ""
 # -----------------------------
 # Installer phpMyAdmin
 # -----------------------------
-
+echo ""
+echo ""
+echo "=> Installation et configuration de phpMyAdmin..."
+echo ""
+echo ""
 # Créer l’arborescence
 mkdir -p /var/www/phpmyadmin/httpdocs
 chown -R www-data:www-data /var/www
@@ -470,6 +533,11 @@ echo ""
 # -----------------------------
 # Installer et configurer VsFTPd
 # -----------------------------
+echo ""
+echo ""
+echo "=> Installation et configuration de VsFTPd..."
+echo ""
+echo ""
 apt install vsftpd -y
 echo ""
 echo ""
@@ -539,6 +607,11 @@ fi
 # -----------------------------
 # Configurer logrotate pour /var/www/**/logs/*.log
 # -----------------------------
+echo ""
+echo ""
+echo "=> Configuration de logrotate pour /var/www/**/logs/*.log..."
+echo ""
+echo ""
 LOGROTATE_FILE="/etc/logrotate.d/www_logs"
 
 cat <<EOF > "$LOGROTATE_FILE"
@@ -567,6 +640,11 @@ echo ""
 # -----------------------------
 # Configurer le site par défaut Nginx
 # -----------------------------
+echo ""
+echo ""
+echo "=> Configuration du site par défaut Nginx pour refuser les connexions..."
+echo ""
+echo ""
 rm /etc/nginx/sites-enabled/default
 cp "$SCRIPT_DIR/default_refuse" /etc/nginx/sites-available/
 ln -s /etc/nginx/sites-available/default_refuse /etc/nginx/sites-enabled/
@@ -581,6 +659,11 @@ echo ""
 # -----------------------------
 # Installation de MSMTP
 # -----------------------------
+echo ""
+echo ""
+echo "=> Installation de MSMTP pour l'envoi d'emails..."
+echo ""
+echo ""
 DEBIAN_FRONTEND=noninteractive apt install -y msmtp msmtp-mta
 echo ""
 echo ""
@@ -593,6 +676,11 @@ echo ""
 # ------------------------------
 # Configurer MSMTP
 # ------------------------------
+echo ""
+echo ""
+echo "=> Configuration de MSMTP..."
+echo ""
+echo ""
 cp "$SCRIPT_DIR/msmtprc" /etc/msmtprc
 chmod 600 /etc/msmtprc
 chown root:root /etc/msmtprc
@@ -620,6 +708,11 @@ echo ""
 # -----------------------------
 # Redémarrage du service SSH
 # -----------------------------
+echo ""
+echo ""
+echo "=> Redémarrage du service SSH..."
+echo ""
+echo ""
 systemctl restart ssh
 echo ""
 echo ""
@@ -632,6 +725,11 @@ echo ""
 # -----------------------------
 # Sauvegarde des sites
 # -----------------------------
+echo ""
+echo ""
+echo "=> Installation et configuration du script de sauvegarde..."
+echo ""
+echo ""
 apt-get install -y sshpass
 mkdir -p /etc/server_backup
 cp "$SCRIPT_DIR/backup.sh" /etc/server_backup/backup.sh
@@ -677,6 +775,11 @@ echo ""
 # -----------------------------
 # Suppression des mots de passe du fichier setup.conf
 # -----------------------------
+echo ""
+echo ""
+echo "=> Suppression des mots de passe du fichier setup.conf..."
+echo ""
+echo ""
 sed -i "s/ADMIN_PASSWORD=\"$ADMIN_PASSWORD\"/ADMIN_PASSWORD=\"\"/g" $SCRIPT_DIR/setup.conf
 sed -i "s/DB_ADMIN_PASSWORD=\"$DB_ADMIN_PASSWORD\"/DB_ADMIN_PASSWORD=\"\"/g" $SCRIPT_DIR/setup.conf
 sed -i "s/PHPMA_PASSWORD=\"$PHPMA_PASSWORD\"/PHPMA_PASSWORD=\"\"\"/g" $SCRIPT_DIR/setup.conf
@@ -686,6 +789,28 @@ sed -i "s/SMTP_PASSWORD=\"$SMTP_PASSWORD\"/SMTP_PASSWORD=\"\"/g" $SCRIPT_DIR/set
 echo ""
 echo ""
 echo "=> Mots de passe supprimés du fichier setup.conf"
+echo ""
+echo ""
+
+
+
+# -----------------------------
+# Copie des fichiers de configuration dans /etc/server_setup
+# -----------------------------
+echo ""
+echo ""
+echo "=> Copie des fichiers de configuration dans /etc/server_setup..."
+echo ""
+echo ""
+cp "$SCRIPT_DIR/setup.conf" /etc/server_setup/setup.conf
+chmod 640 /etc/server_setup/setup.conf
+chown root:root /etc/server_setup/setup.conf
+cp "$SCRIPT_DIR/setup.sh" /etc/server_setup/setup.sh
+chmod 750 /etc/server_setup/setup.sh
+chown root:root /etc/server_setup/setup.sh
+echo ""
+echo ""
+echo "=> Fichiers de configuration copiés dans /etc/server_setup"
 echo ""
 echo ""
 
