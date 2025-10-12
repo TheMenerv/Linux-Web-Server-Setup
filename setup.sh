@@ -56,6 +56,9 @@ echo " - Sauvegardes SFTP : $BACKUP_SFTP_USER@$BACKUP_SFTP_HOST"
 echo " - Heure des sauvegardes : $BACKUP_TIME"
 echo " - Inclure /etc dans les sauvegardes : $BACKUP_INCLUDE_ETC"
 echo " - Fichier log des sauvegardes : $BACKUP_LOG_FILE"
+echo " - Email d'alerte des sauvegardes : $BACKUP_ALERT_EMAIL"
+echo " - Serveur SMTP : $SMTP_SERVER:$SMTP_PORT (TLS: $SMTP_TLS)"
+echo " - Email d'envoi : $SMTP_FROM"
 echo ""
 read -p "=> Les informations sont-elles correctes ? (Entrez pour continuer, Ctrl+C pour annuler)"
 echo ""
@@ -575,6 +578,44 @@ echo ""
 echo ""
 
 
+# -----------------------------
+# Installation de MSMTP
+# -----------------------------
+DEBIAN_FRONTEND=noninteractive apt install -y msmtp msmtp-mta
+echo ""
+echo ""
+echo "=> MSMTP installé"
+echo ""
+echo ""
+
+
+
+# ------------------------------
+# Configurer MSMTP
+# ------------------------------
+cp "$SCRIPT_DIR/msmtprc" /etc/msmtprc
+chmod 600 /etc/msmtprc
+chown root:root /etc/msmtprc
+sed -i "s/{host}/$SMTP_SERVER/g" /etc/msmtprc
+sed -i "s/{port}/$SMTP_PORT/g" /etc/msmtprc
+sed -i "s/{from}/$SMTP_FROM/g" /etc/msmtprc
+sed -i "s/{user}/$SMTP_USERNAME/g" /etc/msmtprc
+sed -i "s/{password}/$SMTP_PASSWORD/g" /etc/msmtprc
+if [[ "$SMTP_TLS" =~ ^(true|True|1|yes|YES|Yes)$ ]]; then
+    sed -i "s/{tls}/on/g" /etc/msmtprc
+else
+    sed -i "s/{tls}/off/g" /etc/msmtprc
+fi
+touch /var/log/msmtp.log
+chmod 660 /var/log/msmtp.log
+chown root:root /var/log/msmtp.log
+echo ""
+echo ""
+echo "=> MSMTP configuré"
+echo ""
+echo ""
+
+
 
 # -----------------------------
 # Redémarrage du service SSH
@@ -612,6 +653,7 @@ echo "BACKUP_SFTP_USER=${BACKUP_SFTP_USER}" >> /etc/server_backup/backup.conf
 echo "BACKUP_SFTP_PASS=${BACKUP_SFTP_PASS}" >> /etc/server_backup/backup.conf
 echo "BACKUP_SFTP_REMOTE_PATH=${BACKUP_SFTP_REMOTE_PATH}" >> /etc/server_backup/backup.conf
 echo "BACKUP_LOG_FILE=${BACKUP_LOG_FILE}" >> /etc/server_backup/backup.conf
+echo "BACKUP_ALERT_EMAIL=${BACKUP_ALERT_EMAIL}" >> /etc/server_backup/backup.conf
 
 # Ajouter une tâche cron pour les sauvegardes
 if [[ "$BACKUP_TIME" =~ ^([0-1][0-9]|2[0-3]):([0-5][0-9])$ ]]; then
@@ -640,6 +682,7 @@ sed -i "s/DB_ADMIN_PASSWORD=\"$DB_ADMIN_PASSWORD\"/DB_ADMIN_PASSWORD=\"\"/g" $SC
 sed -i "s/PHPMA_PASSWORD=\"$PHPMA_PASSWORD\"/PHPMA_PASSWORD=\"\"\"/g" $SCRIPT_DIR/setup.conf
 sed -i "s/FTP_ADMIN_PASSWORD=\"$FTP_ADMIN_PASSWORD\"/FTP_ADMIN_PASSWORD=\"\"/g" $SCRIPT_DIR/setup.conf
 sed -i "s/BACKUP_SFTP_PASS=\"$BACKUP_SFTP_PASS\"/BACKUP_SFTP_PASS=\"\"/g" $SCRIPT_DIR/setup.conf
+sed -i "s/SMTP_PASSWORD=\"$SMTP_PASSWORD\"/SMTP_PASSWORD=\"\"/g" $SCRIPT_DIR/setup.conf
 echo ""
 echo ""
 echo "=> Mots de passe supprimés du fichier setup.conf"
