@@ -419,6 +419,7 @@ echo ""
 mkdir -p /var/www/phpmyadmin/httpdocs
 chown -R www-data:www-data /var/www
 chmod -R 774 /var/www
+udo chmod g+s /var/www/
 echo ""
 echo ""
 echo "=> Arborescence phpMyAdmin créée"
@@ -767,6 +768,35 @@ cron_entry="${mm} ${hh} * * * /etc/server_backup/backup.sh >> ${BACKUP_LOG_FILE}
 echo ""
 echo ""
 echo "=> Script de sauvegarde configuré"
+echo ""
+echo ""
+
+
+
+# -----------------------------
+# Copie du script add_php_site.sh
+# -----------------------------
+echo ""
+echo ""
+echo "=> Copie du script add_php_site.sh dans /etc/server_setup/"
+echo ""
+echo ""
+mkdir -p /etc/server_setup
+chmod 750 /etc/server_setup
+chown root:root /etc/server_setup
+cp "$SCRIPT_DIR/add_php_site.sh" /etc/server_setup/add_php_site.sh
+sed -i "s/{email}/$ADMIN_EMAIL/g" /etc/server_setup/add_php_site.sh
+chmod 750 /etc/server_setup/add_php_site.sh
+chown root:root /etc/server_setup/add_php_site.sh
+cp "$SCRIPT_DIR/site.temp.conf" /etc/server_setup/site.temp.conf
+chmod 640 /etc/server_setup/site.temp.conf
+chown root:root /etc/server_setup/site.temp.conf
+cp "$SCRIPT_DIR/site.conf" /etc/server_setup/site.conf
+chmod 640 /etc/server_setup/site.conf
+chown root:root /etc/server_setup/site.conf
+echo ""
+echo ""
+echo "=> Script add_php_site.sh copié dans /etc/server_setup/"
 echo ""
 echo ""
 
