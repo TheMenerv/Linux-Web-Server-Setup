@@ -100,7 +100,7 @@ fi
 
 
 # Configurer Nginx (http)
-cp "$SCRIPT_DIR/site.temp.conf" /etc/nginx/sites-available/$DOMAIN.conf
+cp "$SCRIPT_DIR/site.temp.php.conf" /etc/nginx/sites-available/$DOMAIN.conf
 sed -i "s/{name}/$DOMAIN/g" /etc/nginx/sites-available/$DOMAIN.conf
 ln -s /etc/nginx/sites-available/$DOMAIN.conf /etc/nginx/sites-enabled/
 systemctl reload nginx
@@ -121,7 +121,7 @@ fi
 
 
 # Configurer Nginx (https)
-cp "$SCRIPT_DIR/site.conf" /etc/nginx/sites-available/$DOMAIN.conf
+cp "$SCRIPT_DIR/site.php.conf" /etc/nginx/sites-available/$DOMAIN.conf
 sed -i "s/{name}/$DOMAIN/g" /etc/nginx/sites-available/$DOMAIN.conf
 ln -sf /etc/nginx/sites-available/$DOMAIN.conf /etc/nginx/sites-enabled/
 systemctl reload nginx

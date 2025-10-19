@@ -1,0 +1,20 @@
+[Unit]
+Description="{description}"
+After=network.target
+
+[Service]
+WorkingDirectory=/var/www/{path}
+ExecStart=dotnet "/var/www/{path}/{dll}"
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier={name}
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT={environment}
+Environment=ASPNETCORE_URLS=http://localhost:{port}
+# Ajouter d'autres variables d'environnement si nécessaire
+# puis faire un 'systemctl daemon-reload'
+# et 'systemctl restart {name}' pour appliquer les changements
+
+[Install]
+WantedBy=multi-user.target

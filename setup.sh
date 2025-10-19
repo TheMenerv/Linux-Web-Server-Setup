@@ -788,15 +788,44 @@ cp "$SCRIPT_DIR/add_php_site.sh" /etc/server_setup/add_php_site.sh
 sed -i "s/{email}/$ADMIN_EMAIL/g" /etc/server_setup/add_php_site.sh
 chmod 750 /etc/server_setup/add_php_site.sh
 chown root:root /etc/server_setup/add_php_site.sh
-cp "$SCRIPT_DIR/site.temp.conf" /etc/server_setup/site.temp.conf
-chmod 640 /etc/server_setup/site.temp.conf
-chown root:root /etc/server_setup/site.temp.conf
-cp "$SCRIPT_DIR/site.conf" /etc/server_setup/site.conf
-chmod 640 /etc/server_setup/site.conf
-chown root:root /etc/server_setup/site.conf
+cp "$SCRIPT_DIR/site.temp.conf" /etc/server_setup/site.temp.php.conf
+chmod 640 /etc/server_setup/site.temp.php.conf
+chown root:root /etc/server_setup/site.temp.php.conf
+cp "$SCRIPT_DIR/site.php.conf" /etc/server_setup/site.php.conf
+chmod 640 /etc/server_setup/site.php.conf
+chown root:root /etc/server_setup/site.php.conf
 echo ""
 echo ""
 echo "=> Script add_php_site.sh copié dans /etc/server_setup/"
+echo ""
+echo ""
+
+
+
+# -----------------------------
+# Copie du script add_dotnetcore_site.sh
+# -----------------------------
+echo ""
+echo ""
+echo "=> Copie du script add_dotnetcore_site.sh dans /etc/server_setup/"
+echo ""
+echo ""
+cp "$SCRIPT_DIR/add_dotnetcore_site.sh" /etc/server_setup/add_dotnetcore_site.sh
+sed -i "s/{email}/$ADMIN_EMAIL/g" /etc/server_setup/add_dotnetcore_site.sh
+chmod 750 /etc/server_setup/add_dotnetcore_site.sh
+chown root:root /etc/server_setup/add_dotnetcore_site.sh
+cp "$SCRIPT_DIR/site.temp.dotnet.conf" /etc/server_setup/site.temp.dotnet.conf
+chmod 640 /etc/server_setup/site.temp.dotnet.conf
+chown root:root /etc/server_setup/site.temp.conf
+cp "$SCRIPT_DIR/site.dotnet.conf" /etc/server_setup/site.dotnet.conf
+chmod 640 /etc/server_setup/site.dotnet.conf
+chown root:root /etc/server_setup/site.dotnet.conf
+cp "$SCRIPT_DIR/app.service" /etc/server_setup/app.service
+chmod 640 /etc/server_setup/app.service
+chown root:root /etc/server_setup/app.service
+echo ""
+echo ""
+echo "=> Script add_dotnetcore_site.sh copié dans /etc/server_setup/"
 echo ""
 echo ""
 
