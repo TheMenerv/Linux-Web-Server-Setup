@@ -788,7 +788,7 @@ cp "$SCRIPT_DIR/add_php_site.sh" /etc/server_setup/add_php_site.sh
 sed -i "s/{email}/$ADMIN_EMAIL/g" /etc/server_setup/add_php_site.sh
 chmod 750 /etc/server_setup/add_php_site.sh
 chown root:root /etc/server_setup/add_php_site.sh
-cp "$SCRIPT_DIR/site.temp.conf" /etc/server_setup/site.temp.php.conf
+cp "$SCRIPT_DIR/site.temp.php.conf" /etc/server_setup/site.temp.php.conf
 chmod 640 /etc/server_setup/site.temp.php.conf
 chown root:root /etc/server_setup/site.temp.php.conf
 cp "$SCRIPT_DIR/site.php.conf" /etc/server_setup/site.php.conf
