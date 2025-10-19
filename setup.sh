@@ -257,6 +257,7 @@ apt install fail2ban -y
 JAIL_LOCAL_SRC="$SCRIPT_DIR/jail.local"
 if [ -f "$JAIL_LOCAL_SRC" ]; then
     cp "$JAIL_LOCAL_SRC" /etc/fail2ban/jail.local
+    systemctl enable fail2ban
     systemctl restart fail2ban
     echo ""
     echo ""
@@ -311,6 +312,7 @@ ufw allow 443/tcp
 # HTTP
 ufw allow 80/tcp
 
+ufw reload
 echo ""
 echo ""
 echo "=> Ports Nginx ouverts dans le pare-feu"
@@ -419,7 +421,7 @@ echo ""
 mkdir -p /var/www/phpmyadmin/httpdocs
 chown -R www-data:www-data /var/www
 chmod -R 774 /var/www
-udo chmod g+s /var/www/
+chmod g+s /var/www/
 echo ""
 echo ""
 echo "=> Arborescence phpMyAdmin créée"
