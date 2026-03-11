@@ -32,7 +32,7 @@ apt autoremove -y
 
 3. Création d'un utilisateur administrateur
 ```bash
-adduser -m -s /bin/bash -p "{{password}}" "{{username}}"
+useradd -m -s /bin/bash -p "{{password}}" "{{username}}"
 usermod -aG sudo "{{username}}"
 ```
 
