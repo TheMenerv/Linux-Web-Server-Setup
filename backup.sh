@@ -287,7 +287,7 @@ if [[ $? -ne 0 ]]; then
   EMAIL_BODY+=("Échec de la liste des fichiers distants sur le serveur $HOSTNAME_SIMPLE.")
   exit 1
 fi
-FILE_NAMES=$(echo "$FILES" | tail -n +2 | awk '{print $NF}')
+FILE_NAMES=$(echo "$FILES" | tail -n +2 | awk '{print $NF}' | grep -w "$HOSTNAME_SIMPLE")
 COUNT=$(echo "$FILE_NAMES" | wc -l)
 if [ "$COUNT" -gt "$BACKUP_KEEP_REMOTE" ]; then
   DEL=$((COUNT - BACKUP_KEEP_REMOTE))
