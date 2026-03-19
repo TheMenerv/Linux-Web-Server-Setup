@@ -12,6 +12,8 @@
 Port {port}
 # Option facultative pour restreindre l'adresse d'écoute
 #ListenAddress 0.0.0.0
+# Autorise l'accès sftp
+Subsystem sftp internal-sftp
 
 # ----------------------------
 # Authentification
