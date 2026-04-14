@@ -333,7 +333,7 @@ apt install software-properties-common -y
 add-apt-repository ppa:ondrej/php -y
 apt update
 
-apt install php8.2 php8.2-fpm php8.2-mysql php8.2-cli php8.2-curl php8.2-xml php8.2-mbstring -y
+apt install php8.2 php8.2-fpm php8.2-mysql php8.2-cli php8.2-curl php8.2-xml php8.2-mbstring php8.2-sqlite3 -y
 systemctl enable php8.2-fpm
 systemctl start php8.2-fpm
 
